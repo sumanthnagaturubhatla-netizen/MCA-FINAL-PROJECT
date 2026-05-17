@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Traffic AI</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, var(--bg-color));
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--panel-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+        }
+
+        h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        select, input[type="range"], input[type="file"] {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            padding: 0;
+            height: 6px;
+            background: #334155;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+            color: var(--success);
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        video, img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--panel-border);
+            margin-top: 1rem;
+            background: #000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Smart Traffic AI</h1>
+        <p class="subtitle">Real-time GNN and YOLO-based Intersection Management</p>
+    </header>
+
+    <div class="container">
+        <!-- Manual Prediction Card -->
+        <div class="card">
+            <h3>🚦 Manual Traffic Prediction</h3>
+            <form method="POST">
+                
+                <div class="form-group">
+                    <label>Target Intersection Node</label>
+                    <select name="node">
+                        {% for n in nodes %}
+                        <option value="{{n}}">{{n}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Route 1 Traffic Density</label>
+                    <input type="range" name="r1" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
+                    <output>50</output>%
+                </div>
+                
+                <div class="form-group">
+                    <label>Route 2 Traffic Density</label>
+                    <input type="range" name="r2" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
+                    <output>50</output>%
+                </div>
+                
+                <div class="form-group">
+                    <label>Route 3 Traffic Density</label>
+                    <input type="range" name="r3" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
+                    <output>50</output>%
+                </div>
+                
+                <div class="form-group">
+                    <label>Route 4 Traffic Density</label>
+                    <input type="range" name="r4" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
+                    <output>50</output>%
+                </div>
+
+                <button type="submit">Run Prediction</button>
+            </form>
+
+            {% if slider_result %}
+            <div class="result-box">
+                Prediction Status:<br>
+                <span style="font-size: 1.5rem; color: #fff;">{{slider_result}}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Video Analysis Card -->
+        <div class="card">
+            <h3>📹 AI Video Analysis</h3>
+            
+            <div class="form-group">
+                <label>Upload Traffic Footage (.mp4)</label>
+                <input type="file" id="videoUpload" accept="video/mp4,video/webm">
+            </div>
+
+            <video id="videoPlayer" controls>
+                <source id="videoSource" src="" type="video/mp4">
+            </video>
+
+            <div class="btn-group">
+                <button type="button" class="btn-secondary" onclick="captureFrame()">1. Capture Frame</button>
+                <button type="button" id="predictBtn" onclick="predictFrame()">2. Analyze Frame</button>
+            </div>
+
+            <canvas id="canvas" style="display:none;"></canvas>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box" id="resultText"></div>
+                <img id="resultImage">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Video handling
+        const videoUpload = document.getElementById("videoUpload");
+        const videoPlayer = document.getElementById("videoPlayer");
+        const videoSource = document.getElementById("videoSource");
+
+        videoUpload.addEventListener("change", function(){
+            const file = this.files[0];
+            if(!file) return;
+            const url = URL.createObjectURL(file);
+            videoSource.src = url;
+            videoPlayer.load();
+        });
+
+        // Frame capture
+        let capturedBlob = null;
+        function captureFrame(){
+            if(!videoPlayer.duration) {
+                alert("Please load a video first!");
+                return;
+            }
+            
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = videoPlayer.videoWidth;
+            canvas.height = videoPlayer.videoHeight;
+            ctx.drawImage(videoPlayer, 0, 0);
+
+            canvas.toBlob(function(blob){
+                capturedBlob = blob;
+                const btn = document.querySelector('.btn-secondary');
+                const origText = btn.innerText;
+                btn.innerText = "✓ Frame Captured";
+                btn.style.background = "var(--success)";
+                setTimeout(() => { 
+                    btn.innerText = "1. Capture Another Frame";
+                    btn.style.background = ""; 
+                }, 2000);
+            }, "image/jpeg");
+        }
+
+        // Analysis API Call
+        function predictFrame(){
+            if(!capturedBlob){
+                alert("Please capture a frame first using button 1!");
+                return;
+            }
+
+            const btn = document.getElementById("predictBtn");
+            const origText = btn.innerText;
+            btn.innerHTML = "<div class='spinner' style='display:block'></div>";
+            btn.disabled = true;
+
+            let formData = new FormData();
+            formData.append("frame", capturedBlob, "frame.jpg");
+
+            fetch("/predict_frame", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                const resContainer = document.getElementById("resultContainer");
+                resContainer.style.display = "block";
+                
+                document.getElementById("resultText").innerHTML =
+                    "Congestion Level: <span style='color:#fff'>" + data.congestion + "</span><br>" +
+                    "Green Light Recommended: <span style='color:#fff'>" + data.green + "</span>";
+
+                document.getElementById("resultImage").src =
+                    "/static/" + data.image + "?t=" + new Date().getTime();
+                
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert("Error analyzing frame. Is the backend running?");
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
